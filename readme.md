@@ -1,8 +1,8 @@
 # PB Autocomplete — CEP para WooCommerce
 
-Autocompleta endereço a partir do CEP no **Checkout em Blocos** do WooCommerce. Funciona apenas com **[PagBank Connect](https://wordpress.org/plugins/pagbank-connect/)** ativo e com **ao menos um método de pagamento** disponível no checkout.
+Autocompleta endereço a partir do CEP no **Checkout em Blocos** do WooCommerce. Funciona apenas com **[PagBank Connect](https://wordpress.org/plugins/pagbank-connect/)** ativo e com **ao menos um método de pagamento** PagBank disponível no checkout.
 
-> Para o diretório do WordPress.org, o ficheiro em inglês é o [`readme.txt`](readme.txt). Este documento (`readme.md`) destina-se ao GitHub e comunidade em português.
+> Para o diretório do WordPress.org, o arquivo em inglês é o [`readme.txt`](readme.txt). Este documento (`readme.md`) é destinado ao GitHub e à comunidade em português.
 
 ---
 
@@ -14,7 +14,7 @@ O **PB Autocomplete** preenche automaticamente os campos de endereço (rua, bair
 
 - Autocomplete de endereço por CEP no Checkout em Blocos (nativo do WooCommerce)
 - Integração OpenCEP + ViaCEP (redundância)
-- Opção para exibir o campo CEP como primeiro na secção de **cobrança** ou **entrega** (no editor de blocos, ao editar a página de checkout)
+- Opção para exibir o campo CEP como primeiro na seção de **cobrança** ou **entrega** (no editor de blocos, ao editar a página de checkout)
 - Dependência explícita: WooCommerce e PagBank Connect instalados e ativos
 
 ### Requisitos
@@ -42,7 +42,7 @@ npm run build
 ## Configuração
 
 1. O autocomplete funciona no Checkout em Blocos quando o cliente digita um **CEP válido (8 dígitos)**. Os campos são preenchidos após consulta ao **OpenCEP** (ou **ViaCEP**, se necessário).
-2. Para mostrar o **CEP primeiro** (acima do endereço): edite a **página de checkout** no editor de blocos, selecione o bloco **Endereço de entrega** ou **Endereço de cobrança**, abra no painel lateral a secção **PB Autocomplete**, marque as opções desejadas e clique em **Salvar** no topo da página.
+2. Para mostrar o **CEP primeiro** (acima do endereço): edite a **página de checkout** no editor de blocos, selecione o bloco **Endereço de entrega** ou **Endereço de cobrança**, abra no painel lateral a seção **PB Autocomplete**, marque as opções desejadas e clique em **Salvar** no topo da página.
 
 ---
 
@@ -57,16 +57,16 @@ npm run build
 Confira:
 
 1. PagBank Connect ativo e com **pelo menos um** método de pagamento habilitado no WooCommerce;
-2. Loja a usar **Checkout em Blocos** (página de checkout em blocos);
+2. Loja usando **Checkout em Blocos** (página de checkout em blocos);
 3. CEP com **8 dígitos** e válido em OpenCEP ou ViaCEP.
 
 ### De onde vêm os dados de endereço?
 
-Da API pública [OpenCEP](https://opencep.com/). Se estiver indisponível, usa-se [ViaCEP](https://viacep.com.br/).
+Da API pública [OpenCEP](https://opencep.com/). Se estiver indisponível, usa [ViaCEP](https://viacep.com.br/).
 
 ### Posso usar sem o PagBank Connect?
 
-**Não.** O plugin integra-se ao ecossistema PagBank; sem PagBank Connect ativo e com método disponível, **o script de autocomplete não é carregado** no checkout.
+**Não.** O plugin se integra ao ecossistema PagBank; sem PagBank Connect ativo e com método disponível, **o script de autocomplete não é carregado** no checkout.
 
 ### Como colocar o CEP como primeiro campo?
 
@@ -74,7 +74,7 @@ Edite a página de checkout no editor de blocos, selecione o bloco de endereço 
 
 ---
 
-## Capturas de ecrã
+## Capturas de tela
 
 Imagens na pasta [`assets/`](assets/) (GitHub mostra Markdown com caminhos relativos ao repositório).
 
