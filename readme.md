@@ -30,13 +30,13 @@ O **PB Autocomplete** preenche automaticamente os campos de endereço (rua, bair
 1. Certifique-se de que **WooCommerce** e **PagBank Connect** estão instalados e ativos.
 2. Instale e ative o plugin **PB Autocomplete**  
    *(Plugins → Adicionar novo → procurar “PB Autocomplete” ou fazer upload do ZIP)*.
-3. Se compilar a partir do código-fonte, na pasta do plugin execute:
+3. (opcional ¹) Se compilar a partir do código-fonte, na pasta do plugin execute:
 
 ```bash
 npm install
 npm run build
 ```
-
+¹ Só é necessário se você instalou a partir do código fonte (não tem a pasta `build`). Se baixar do diretório oficial, não precisa.
 ---
 
 ## Configuração
@@ -76,7 +76,7 @@ Edite a página de checkout no editor de blocos, selecione o bloco de endereço 
 
 ## Capturas de tela
 
-Imagens na pasta [`assets/`](assets/) (GitHub mostra Markdown com caminhos relativos ao repositório).
+Imagens na pasta [`assets/`](assets/).
 
 ### Checkout com autocomplete
 
