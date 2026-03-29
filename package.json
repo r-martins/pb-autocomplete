@@ -1,6 +1,6 @@
 {
   "name": "pb-autocomplete",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Autocomplete de endereço por CEP no Checkout em Blocos (WooCommerce)",
   "license": "GPL-3.0-or-later",
   "engines": {

@@ -22,6 +22,46 @@ class PB_Autocomplete_Checkout {
 	}
 
 	/**
+	 * Whether a WooCommerce payment gateway ID belongs to PagBank Connect (PIX, cartão, boleto,
+	 * Checkout PagBank, recorrência, ou gateway unificado rm-pagbank).
+	 *
+	 * @param string $gateway_id Gateway id.
+	 * @return bool
+	 */
+	public static function is_pagbank_gateway_id( $gateway_id ) {
+		if ( ! is_string( $gateway_id ) || '' === $gateway_id ) {
+			return false;
+		}
+		if ( 'rm-pagbank' === $gateway_id ) {
+			return true;
+		}
+		return strpos( $gateway_id, 'rm-pagbank-' ) === 0;
+	}
+
+	/**
+	 * True if at least one PagBank gateway is enabled in WooCommerce (admin-safe; does not rely on checkout session).
+	 *
+	 * @return bool
+	 */
+	public static function has_pagbank_payment_enabled() {
+		if ( ! function_exists( 'WC' ) || ! WC()->payment_gateways || empty( WC()->payment_gateways->payment_gateways ) ) {
+			return false;
+		}
+		foreach ( WC()->payment_gateways->payment_gateways as $gateway ) {
+			if ( ! is_object( $gateway ) || ! isset( $gateway->enabled, $gateway->id ) ) {
+				continue;
+			}
+			if ( 'yes' !== $gateway->enabled ) {
+				continue;
+			}
+			if ( self::is_pagbank_gateway_id( $gateway->id ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Check if PagBank has at least one available payment method on checkout.
 	 *
 	 * @return bool
@@ -32,7 +72,7 @@ class PB_Autocomplete_Checkout {
 		}
 		$available = WC()->payment_gateways->get_available_payment_gateways();
 		foreach ( array_keys( $available ) as $id ) {
-			if ( strpos( $id, 'rm-pagbank-' ) === 0 ) {
+			if ( self::is_pagbank_gateway_id( $id ) ) {
 				return true;
 			}
 		}
