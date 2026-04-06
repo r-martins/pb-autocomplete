@@ -1,8 +1,16 @@
 # PB Autocomplete — CEP para WooCommerce
 
+[![Versão mínima do PHP](https://img.shields.io/badge/php-%3E%3D%207.4-8892BF.svg?style=flat-square)](https://php.net/)
+[![Última versão](https://img.shields.io/github/v/release/r-martins/pb-autocomplete)](https://github.com/r-martins/pb-autocomplete/releases)
+![Último commit (master)](https://img.shields.io/github/last-commit/r-martins/pb-autocomplete/master)
+![WordPress Plugin: Tested WP Version](https://img.shields.io/wordpress/plugin/tested/pb-autocomplete)
+![Downloads por mês](https://img.shields.io/wordpress/plugin/dm/pb-autocomplete)
+![Avaliação dos clientes no WordPress](https://img.shields.io/wordpress/plugin/stars/pb-autocomplete?color=yellow)
+[![Deploy pro WordPress SVN](https://github.com/r-martins/pb-autocomplete/actions/workflows/releaseToSvnWp.yaml/badge.svg)](https://github.com/r-martins/pb-autocomplete/actions/workflows/releaseToSvnWp.yaml)
+
 Autocompleta endereço a partir do CEP no **Checkout em Blocos** do WooCommerce. Funciona apenas com **[PagBank Connect](https://wordpress.org/plugins/pagbank-connect/)** ativo e com **ao menos um método de pagamento** PagBank disponível no checkout.
 
-> Para o diretório do WordPress.org, o arquivo em inglês é o [`readme.txt`](readme.txt). Este documento (`readme.md`) é destinado ao GitHub e à comunidade em português.
+> Para o diretório do WordPress.org, o arquivo canônico é o [`readme.txt`](readme.txt) (português do Brasil). A variante em inglês está em [`readme-en_US.txt`](readme-en_US.txt). Este `readme.md` resume o mesmo conteúdo para o GitHub.
 
 ---
 
@@ -27,16 +35,23 @@ O **PB Autocomplete** preenche automaticamente os campos de endereço (rua, bair
 
 ## Instalação
 
+### Pelo WordPress.org (pacote pronto — recomendado)
+
+1. Abra **[PB Autocomplete no diretório brasileiro](https://br.wordpress.org/plugins/pb-autocomplete/)** ou a [página em inglês no WordPress.org](https://wordpress.org/plugins/pb-autocomplete/) e use **Baixar** o ZIP oficial, ou no wp-admin vá em **Plugins → Adicionar novo**, procure **PB Autocomplete** e instale/atualize a partir do repositório.
+2. Garanta que **WooCommerce** e **PagBank Connect** estão instalados e ativos, com **pelo menos um** método PagBank habilitado no checkout (ver [Requisitos](#requisitos) acima).
+3. **Não** é necessário `npm install` nem `npm run build` — o pacote do WordPress.org já inclui a pasta `build/`.
+
+### A partir do repositório (código-fonte / GitHub)
+
 1. Certifique-se de que **WooCommerce** e **PagBank Connect** estão instalados e ativos.
-2. Instale e ative o plugin **PB Autocomplete**  
-   *(Plugins → Adicionar novo → procurar “PB Autocomplete” ou fazer upload do ZIP)*.
-3. (opcional ¹) Se compilar a partir do código-fonte, na pasta do plugin execute:
+2. Instale o plugin (clone, ZIP do [GitHub](https://github.com/r-martins/pb-autocomplete), etc.) e ative-o em **Plugins**.
+3. Se a pasta `build/` não existir ou você alterou arquivos em `src/`, na raiz do plugin execute:
 
 ```bash
 npm install
 npm run build
 ```
-¹ Só é necessário se você instalou a partir do código fonte (não tem a pasta `build`). Se baixar do diretório oficial, não precisa.
+
 ---
 
 ## Configuração
@@ -48,7 +63,7 @@ npm run build
 
 ## Serviços externos
 
-O plugin depende de **APIs públicas** para consultar endereço a partir do CEP. Os pedidos são feitos em **HTTPS** pelo **navegador do cliente** no checkout em blocos.
+O plugin depende de **APIs públicas** para consultar endereço a partir do CEP. As requisições são feitas em **HTTPS** pelo **navegador do cliente** no checkout em blocos.
 
 | Serviço | Uso | O que é enviado | Termos / política |
 |--------|-----|-----------------|-------------------|
@@ -56,7 +71,7 @@ O plugin depende de **APIs públicas** para consultar endereço a partir do CEP.
 | **ViaCEP** (`viacep.com.br`) | Fallback se OpenCEP falhar | GET `https://viacep.com.br/ws/{CEP}/json/` — só o CEP no caminho. | [Documentação e condições no site](https://viacep.com.br/) · [Contato do operador](https://viacep.com.br/faleconosco/) (não há política de privacidade em URL separada) |
 | **PagBank Connect** | Dependência obrigatória do plugin | Dados de pagamento e integração PagBank são tratados pelo **PagBank Connect**, não por este plugin. | [Plugin no WordPress.org](https://wordpress.org/plugins/pagbank-connect/) |
 
-> Para o diretório WordPress.org, a secção canónica em inglês está em [`readme.txt`](readme.txt) (`== External services ==`).
+> No WordPress.org, a seção **External services** em português do Brasil está no [`readme.txt`](readme.txt); a versão em inglês no [`readme-en_US.txt`](readme-en_US.txt).
 
 ---
 
