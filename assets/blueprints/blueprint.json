@@ -1,0 +1,63 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "PB Autocomplete — Loja teste (Woo + PagBank + CEP)",
+		"description": "WooCommerce, PagBank Connect e PB Autocomplete; opções Brasil/BRL, Connect sandbox e produto simples R$ 50.",
+		"author": "Ricardo Martins (PagBank Integrações)",
+		"categories": ["woocommerce", "demo"]
+	},
+	"login": true,
+	"landingPage": "/shop",
+	"preferredVersions": {
+		"php": "8.3",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"steps": [
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "woocommerce"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "pagbank-connect"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "pb-autocomplete"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\nupdate_option( 'blogname', 'Loja Teste Pb Autocomplete' );\nupdate_option( 'time_format', 'H:i' );\n/**\n * Ordem de carregamento: WooCommerce antes de PagBank e PB Autocomplete.\n * (A lista pedida com WooCommerce por último faria o PagBank quebrar ao carregar.)\n */\nupdate_option( 'active_plugins', array(\n\t'woocommerce/woocommerce.php',\n\t'pagbank-connect/rm-pagbank.php',\n\t'pb-autocomplete/pb-autocomplete.php',\n) );\n\nupdate_option( 'woocommerce_allowed_countries', 'specific' );\nupdate_option( 'woocommerce_all_except_countries', array() );\nupdate_option( 'woocommerce_specific_allowed_countries', array( 'BR' ) );\nupdate_option( 'woocommerce_ship_to_countries', 'specific' );\nupdate_option( 'woocommerce_specific_ship_to_countries', array( 'BR' ) );\nupdate_option( 'woocommerce_default_customer_address', 'base' );\nupdate_option( 'woocommerce_currency', 'BRL' );\nupdate_option( 'pb_autocomplete_settings', array(\n\t'postcode_first_billing' => true,\n\t'postcode_first_shipping' => true,\n) );\nupdate_option( 'WPLANG', 'pt_BR' );\n\n$pagbank_settings_serialized = 'a:22:{s:11:\"connect_key\";s:40:\"CONSANDBOX795E98520284853531616BF851FF2B\";s:7:\"general\";s:0:\"\";s:19:\"hide_if_unavailable\";s:2:\"no\";s:23:\"skip_processing_virtual\";s:2:\"no\";s:12:\"enable_proxy\";s:2:\"no\";s:5:\"title\";s:11:\"PagBank UOL\";s:14:\"shipping_param\";s:0:\"\";s:18:\"show_payment_icons\";s:3:\"yes\";s:11:\"icons_color\";s:4:\"gray\";s:16:\"success_behavior\";s:0:\"\";s:20:\"success_behavior_url\";s:71:\"https://playground.wordpress.net/scope:patient-chic-village/my-account/\";s:19:\"success_behavior_js\";s:0:\"\";s:18:\"force_order_update\";s:2:\"no\";s:10:\"hide_items\";s:2:\"no\";s:17:\"hash_email_active\";s:2:\"no\";s:22:\"split_payments_section\";s:0:\"\";s:22:\"split_payments_enabled\";s:2:\"no\";s:33:\"split_payments_primary_account_id\";s:0:\"\";s:24:\"split_payments_receivers\";a:0:{}s:10:\"public_key\";s:392:\"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr+ZqgD892U9/HXsa7XqBZUayPquAfh9xx4iwUbTSUAvTlmiXFQNTp0Bvt/5vK2FhMj39qSv1zi2OuBjvW38q1E374nzx6NNBL5JosV0+SDINTlCG0cmigHuBOyWzYmjgca+mtQu4WczCaApNaSuVqgb8u7Bd9GCOL4YJotvV5+81frlSwQXralhwRzGhj/A57CGPgGKiuPT+AOGmykIGEZsSD9RKkyoKIoc0OS8CPIzdBOtTQCIwrLn2FxI83Clcg55W8gkFSOS6rWNbG5qFZWMll6yl02HtunalHmUlRUL66YeGXdMDC2PuRcmZbGO5a/2tbVppW6mfSWG3NPRpgwIDAQAB\";s:21:\"public_key_created_at\";i:1577836800000;s:10:\"is_sandbox\";b:1;}';\n\nupdate_option( 'woocommerce_rm-pagbank_settings', maybe_unserialize( $pagbank_settings_serialized ) );\n\nif ( class_exists( 'WC_Product_Simple' ) ) {\n\t$product = new WC_Product_Simple();\n\t$product->set_name( 'Produto teste R$ 50' );\n\t$product->set_regular_price( '50' );\n\t$product->set_price( '50' );\n\t$product->set_status( 'publish' );\n\t$product->save();\n}\n"
+		},
+		{
+			"step": "setSiteLanguage",
+			"language": "pt_BR"
+		}
+	]
+}
