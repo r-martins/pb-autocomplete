@@ -4,7 +4,7 @@ Tags: woocommerce, checkout, cep, autocomplete, brazil
 Donate link: https://github.com/sponsors/r-martins
 Requires at least: 5.2
 Tested up to: 6.9
-Stable tag: 1.0.4
+Stable tag: 1.0.6
 Requires PHP: 7.4
 Requires Plugins: woocommerce, pagbank-connect
 License: GPLv3
