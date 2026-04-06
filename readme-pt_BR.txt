@@ -40,6 +40,29 @@ Autocompleta endereço a partir do CEP no Checkout em Blocos do WooCommerce. Req
 1. O autocomplete funciona automaticamente no Checkout em Blocos quando o cliente informar um CEP válido (8 dígitos). Os campos de endereço são preenchidos após a consulta ao OpenCEP (ou ViaCEP, se necessário).
 2. Para exibir o CEP como primeiro campo: edite a **página de checkout** no editor de blocos, selecione o bloco "Endereço de entrega" ou "Endereço de cobrança" e, no painel à direita, abra a secção **PB Autocomplete**. Marque as opções desejadas e clique em **Salvar** no topo.
 
+== External services ==
+
+Este plugin envia pedidos **HTTPS GET** a partir do **navegador do cliente** (Checkout em Blocos do WooCommerce) para APIs de terceiros, com o objetivo de obter dados de endereço brasileiro a partir do CEP. O plugin **não** envia nome, e-mail, telefone ou endereço completo para essas APIs — apenas os **dígitos do CEP** vão no caminho do URL, quando o cliente informa um CEP válido com **8 dígitos**.
+
+= OpenCEP (principal) =
+
+* **O que é / para que serve:** API pública de consulta de CEP em `opencep.com`, usada para devolver logradouro, bairro, cidade e UF.
+* **Quais dados são enviados e quando:** Quando o autocomplete é acionado, o navegador solicita `https://opencep.com/v1/{CEP}` (apenas 8 dígitos). Como em qualquer pedido HTTP, metadados típicos do navegador (por exemplo IP, user-agent, referrer) podem ser tratados pelo serviço ou pela infraestrutura.
+* **Termos:** Licença do projeto OpenCEP (MIT): https://github.com/SeuAliado/OpenCEP/blob/main/LICENSE  
+  Informações do serviço: https://opencep.com/
+* **Privacidade:** O domínio `opencep.com` é entregue via **Cloudflare** (CDN). Política de privacidade da Cloudflare: https://www.cloudflare.com/privacypolicy/
+
+= ViaCEP (alternativa) =
+
+* **O que é / para que serve:** Webservice público em `viacep.com.br`, usado só se o OpenCEP não devolver dados utilizáveis para o mesmo CEP.
+* **Quais dados são enviados e quando:** O navegador solicita `https://viacep.com.br/ws/{CEP}/json/`. Só o CEP vai no caminho. Aplica-se a mesma observação sobre metadados de pedido HTTP.
+* **Termos / condições de uso:** Documentação oficial e avisos de uso (incluindo limites a uso massivo abusivo) estão no site do ViaCEP: https://viacep.com.br/
+* **Privacidade:** O ViaCEP **não** disponibiliza uma página dedicada de política de privacidade. Contato do operador: https://viacep.com.br/faleconosco/
+
+= PagBank Connect (dependência obrigatória) =
+
+O PB Autocomplete exige o plugin **PagBank Connect**. Pagamentos, credenciais e outros serviços de terceiros ligados ao PagBank são tratados pelo **PagBank Connect** e pelo PagBank — não pelo PB Autocomplete. Documentação no WordPress.org: https://wordpress.org/plugins/pagbank-connect/ e Termos e Privacidade do PagBank Integrações em https://pbintegracoes.com/terms.
+
 == Frequently Asked Questions ==
 
 = O plugin funciona no checkout legado (shortcode) do WooCommerce? =
@@ -67,6 +90,7 @@ Edite a página de checkout no editor de blocos, selecione o bloco de endereço 
 == Changelog ==
 
 = 1.0.4 =
+* Documentação de serviços de terceiros (OpenCEP, ViaCEP, PagBank Connect) no readme para conformidade com o WordPress.org.
 * Avisos de dependência limitados às telas Plugins e Adicionar plugin (diretriz 11 do diretório de plugins WordPress.org).
 * Detecção de métodos PagBank pelos IDs de gateway `rm-pagbank` (unificado) ou `rm-pagbank-*` (PIX, cartão, boleto, Checkout PagBank, recorrência etc.); aviso opcional no admin quando o PagBank Connect está ativo mas nenhum método PagBank está habilitado (Plugins, Adicionar plugin, WooCommerce → Configurações → Finalizar compra).
 * A verificação “sem método PagBank” executa no hook `init`, para não carregar traduções de outros plugins cedo demais (WordPress 6.7+).

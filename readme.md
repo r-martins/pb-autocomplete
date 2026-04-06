@@ -46,6 +46,20 @@ npm run build
 
 ---
 
+## Serviços externos
+
+O plugin depende de **APIs públicas** para consultar endereço a partir do CEP. Os pedidos são feitos em **HTTPS** pelo **navegador do cliente** no checkout em blocos.
+
+| Serviço | Uso | O que é enviado | Termos / política |
+|--------|-----|-----------------|-------------------|
+| **OpenCEP** (`opencep.com`) | Consulta principal | GET `https://opencep.com/v1/{CEP}` — só o CEP (8 dígitos) no URL. Não enviamos nome, e-mail, telefone nem endereço completo. | [Licença MIT (projeto OpenCEP)](https://github.com/SeuAliado/OpenCEP/blob/main/LICENSE) · [Privacidade Cloudflare](https://www.cloudflare.com/privacypolicy/) (CDN usada por `opencep.com`) |
+| **ViaCEP** (`viacep.com.br`) | Fallback se OpenCEP falhar | GET `https://viacep.com.br/ws/{CEP}/json/` — só o CEP no caminho. | [Documentação e condições no site](https://viacep.com.br/) · [Contato do operador](https://viacep.com.br/faleconosco/) (não há política de privacidade em URL separada) |
+| **PagBank Connect** | Dependência obrigatória do plugin | Dados de pagamento e integração PagBank são tratados pelo **PagBank Connect**, não por este plugin. | [Plugin no WordPress.org](https://wordpress.org/plugins/pagbank-connect/) |
+
+> Para o diretório WordPress.org, a secção canónica em inglês está em [`readme.txt`](readme.txt) (`== External services ==`).
+
+---
+
 ## Perguntas frequentes
 
 ### O plugin funciona no checkout legado (clássico)?
@@ -94,9 +108,14 @@ Imagens na pasta [`assets/`](assets/).
 
 ## Changelog
 
+### 1.0.4
+
+- Documentação de **serviços externos** (OpenCEP, ViaCEP, PagBank Connect) nos readmes para o WordPress.org.
+- Demais itens: ver `readme.txt`.
+
 ### 1.0.3
 
-- Versão atual do plugin (consulte o histórico no repositório para detalhes).
+- Versão antiga listada aqui apenas como referência; veja `readme.txt` para o histórico completo.
 
 ---
 

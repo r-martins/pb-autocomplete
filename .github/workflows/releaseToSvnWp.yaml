@@ -1,0 +1,102 @@
+# Deploy plugin to WordPress.org Subversion (trunk, assets, and version tag).
+# Requires repository secrets: SVN_USERNAME, SVN_PASSWORD (WordPress.org plugin author credentials).
+#
+# SVN: https://plugins.svn.wordpress.org/pb-autocomplete
+# Public: https://wordpress.org/plugins/pb-autocomplete
+#
+# Based on pagbank-connect/.github/workflows/releaseToSvnWp.yaml
+
+name: Deploy to WordPress SVN
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout GitHub repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Install Subversion
+        run: sudo apt-get update -qq && sudo apt-get install -y subversion
+
+      - name: Checkout WordPress SVN repo
+        run: |
+          svn checkout --username "${{ secrets.SVN_USERNAME }}" --password="${{ secrets.SVN_PASSWORD }}" https://plugins.svn.wordpress.org/pb-autocomplete/ ./svn --no-auth-cache
+        shell: bash -O extglob {0}
+
+      - name: Copy files to trunk
+        run: |
+          rsync -r --delete --filter='merge .github/workflows/.rsync-filter' ./ ./svn/trunk/
+        shell: bash -O extglob {0}
+
+      - name: Sync assets directory
+        run: |
+          rsync -r --delete ./assets/ ./svn/assets/
+          cd ./svn/assets/
+          svn add --force * --auto-props --parents --depth infinity -q || true
+          if svn status | grep -q '^[AM!~?]'; then
+            svn ci -m "Updating assets from GitHub (${{ github.sha }})." --username "${{ secrets.SVN_USERNAME }}" --password="${{ secrets.SVN_PASSWORD }}"
+          else
+            echo "No changes under svn/assets."
+          fi
+        shell: bash -O extglob {0}
+
+      - name: Commit trunk
+        run: |
+          cd ./svn/trunk/
+          svn add --force * --auto-props --parents --depth infinity -q || true
+          if svn status | grep -q '^[AM!~?]'; then
+            svn ci -m "Deploy trunk from GitHub (${{ github.sha }})." --username "${{ secrets.SVN_USERNAME }}" --password="${{ secrets.SVN_PASSWORD }}"
+          else
+            echo "No changes to commit under svn/trunk."
+          fi
+        shell: bash -O extglob {0}
+
+      - name: Delete missing files from trunk
+        run: |
+          cd ./svn/trunk/
+          deleted=$(svn status | grep '^!' | cut -c9- || true)
+          if [ -n "$deleted" ]; then
+            echo "$deleted" | xargs -r -d '\n' svn delete
+            svn ci -m "Remove deleted files from trunk (${{ github.sha }})." --username "${{ secrets.SVN_USERNAME }}" --password="${{ secrets.SVN_PASSWORD }}"
+          else
+            echo "No missing files to delete."
+          fi
+        shell: bash -O extglob {0}
+
+      - name: Copy trunk to version tag (if new)
+        run: |
+          latest_tag=$(grep 'Version:' pb-autocomplete.php | head -1 | awk '{print $NF}' | tr -d '\r')
+          if [ -z "$latest_tag" ]; then
+            echo "Could not read Version from pb-autocomplete.php"
+            exit 1
+          fi
+          echo "Plugin header version: ${latest_tag}"
+
+          cd ./svn
+          if [ -d "tags/${latest_tag}" ]; then
+            echo "Tag ${latest_tag} already exists — skipping svn copy (bump * Version in pb-autocomplete.php for a new release)."
+            exit 0
+          fi
+
+          svn copy trunk "tags/${latest_tag}"
+          svn ci -m "Tag ${latest_tag}" --username "${{ secrets.SVN_USERNAME }}" --password="${{ secrets.SVN_PASSWORD }}"
+        shell: bash -O extglob {0}
