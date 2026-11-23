@@ -52,15 +52,32 @@ class PB_Autocomplete_Checkout {
 	}
 
 	/**
-	 * True if at least one PagBank gateway is enabled in WooCommerce (admin-safe; does not rely on checkout session).
+	 * True if at least one PB Integrações gateway is enabled (admin-safe; does not rely on checkout session).
 	 *
-	 * PB Integrações registers either the unified gateway (rm-pagbank) or standalones (rm-pagbank-pix, etc.)
-	 * depending on the current request's ?section=; the WC gateway iterator can miss an enabled method. Options
-	 * are checked as a fallback.
+	 * Prefer wp_options: PB Integrações registers the unified gateway (rm-pagbank) or standalones
+	 * (rm-pagbank-pix, rm-pagbank-cc, rm-pagbank-checkout-pb, …) depending on the current request's
+	 * ?section=, so WC()->payment_gateways can miss an enabled method in admin.
 	 *
 	 * @return bool
 	 */
 	public static function has_pagbank_payment_enabled() {
+		// Options first — reliable regardless of which payment section is open in admin.
+		$unified = get_option( 'woocommerce_rm-pagbank_settings', array() );
+		if ( is_array( $unified ) && self::is_gateway_enabled_value( $unified['enabled'] ?? '' ) ) {
+			return true;
+		}
+
+		foreach ( array( 'pix', 'cc', 'boleto', 'redirect', 'checkout-pb' ) as $suffix ) {
+			$settings = get_option( 'woocommerce_rm-pagbank-' . $suffix . '_settings', array() );
+			if ( is_array( $settings ) && self::is_gateway_enabled_value( $settings['enabled'] ?? '' ) ) {
+				return true;
+			}
+		}
+
+		if ( self::is_gateway_enabled_value( get_option( 'woocommerce_rm-pagbank-recurring_enabled', 'no' ) ) ) {
+			return true;
+		}
+
 		if ( function_exists( 'WC' ) && WC()->payment_gateways && ! empty( WC()->payment_gateways->payment_gateways ) ) {
 			foreach ( WC()->payment_gateways->payment_gateways as $gateway ) {
 				if ( ! is_object( $gateway ) || ! isset( $gateway->id ) ) {
@@ -74,22 +91,6 @@ class PB_Autocomplete_Checkout {
 					return true;
 				}
 			}
-		}
-
-		$unified = get_option( 'woocommerce_rm-pagbank_settings', array() );
-		if ( is_array( $unified ) && self::is_gateway_enabled_value( $unified['enabled'] ?? '' ) ) {
-			return true;
-		}
-
-		foreach ( array( 'pix', 'cc', 'boleto', 'redirect' ) as $suffix ) {
-			$settings = get_option( 'woocommerce_rm-pagbank-' . $suffix . '_settings', array() );
-			if ( is_array( $settings ) && self::is_gateway_enabled_value( $settings['enabled'] ?? '' ) ) {
-				return true;
-			}
-		}
-
-		if ( self::is_gateway_enabled_value( get_option( 'woocommerce_rm-pagbank-recurring_enabled', 'no' ) ) ) {
-			return true;
 		}
 
 		return false;

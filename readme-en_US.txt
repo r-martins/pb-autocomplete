@@ -4,7 +4,7 @@ Tags: woocommerce, checkout, cep, autocomplete, brazil
 Donate link: https://github.com/sponsors/r-martins
 Requires at least: 5.2
 Tested up to: 7.1
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 Requires PHP: 7.4
 Requires Plugins: woocommerce, pagbank-connect
 License: GPLv3
@@ -88,6 +88,9 @@ No. PB Autocomplete is part of the PB Integrações ecosystem and requires the P
 Edit the checkout page in the block editor, select the address block (shipping or billing), and in the right panel open the PB Autocomplete section. Check the options and click Save at the top.
 
 == Changelog ==
+
+= 1.0.7 =
+* Fix: the “no payment method enabled” notice ignored the Checkout PB gateway (`rm-pagbank-checkout-pb`) and could fail in admin depending on the open settings section; detection now checks wp_options first (including PIX, card, boleto, redirect, and checkout-pb).
 
 = 1.0.6 =
 * Copy and docs updated: dependency referred to as **PB Integrações** (formerly PagBank Connect); plugin slug remains `pagbank-connect`.

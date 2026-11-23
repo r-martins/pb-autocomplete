@@ -123,6 +123,10 @@ Imagens na pasta [`assets/`](assets/).
 
 ## Changelog
 
+### 1.0.7
+
+- Correção: detecção de método ativo inclui Checkout PB e prioriza options no admin (evita aviso falso).
+
 ### 1.0.6
 
 - Textos e documentação: dependência referida como **PB Integrações** (antigo PagBank Connect); slug permanece `pagbank-connect`.

@@ -3,7 +3,7 @@
  * Plugin Name:       PB Autocomplete CEP for WooCommerce
  * Plugin URI:        https://pbintegracoes.com/
  * Description:       Autocompleta endereço a partir do CEP no Checkout em Blocos. Requer PB Integrações ativo com ao menos um método de pagamento disponível.
- * Version:           1.0.6
+ * Version:           1.0.7
  * Requires at least: 5.2
  * Requires PHP:      7.4
  * Author:            Ricardo Martins
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PB_AUTOCOMPLETE_VERSION', '1.0.6' );
+define( 'PB_AUTOCOMPLETE_VERSION', '1.0.7' );
 define( 'PB_AUTOCOMPLETE_FILE', __FILE__ );
 define( 'PB_AUTOCOMPLETE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PB_AUTOCOMPLETE_URL', plugin_dir_url( __FILE__ ) );
