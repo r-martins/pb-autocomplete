@@ -22,8 +22,8 @@ class PB_Autocomplete_Checkout {
 	}
 
 	/**
-	 * Whether a WooCommerce payment gateway ID belongs to PagBank Connect (PIX, cartão, boleto,
-	 * Checkout PagBank, recorrência, ou gateway unificado rm-pagbank).
+	 * Whether a WooCommerce payment gateway ID belongs to PB Integrações (PIX, cartão, boleto,
+	 * Checkout PB, recorrência, ou gateway unificado rm-pagbank).
 	 *
 	 * @param string $gateway_id Gateway id.
 	 * @return bool
@@ -39,25 +39,59 @@ class PB_Autocomplete_Checkout {
 	}
 
 	/**
+	 * Whether a gateway "enabled" value is on (handles 'yes', bool, wc_string_to_bool).
+	 *
+	 * @param mixed $enabled Raw gateway enabled value.
+	 * @return bool
+	 */
+	private static function is_gateway_enabled_value( $enabled ) {
+		if ( function_exists( 'wc_string_to_bool' ) && wc_string_to_bool( $enabled ) ) {
+			return true;
+		}
+		return 'yes' === $enabled || true === $enabled || 1 === $enabled || '1' === $enabled;
+	}
+
+	/**
 	 * True if at least one PagBank gateway is enabled in WooCommerce (admin-safe; does not rely on checkout session).
+	 *
+	 * PB Integrações registers either the unified gateway (rm-pagbank) or standalones (rm-pagbank-pix, etc.)
+	 * depending on the current request's ?section=; the WC gateway iterator can miss an enabled method. Options
+	 * are checked as a fallback.
 	 *
 	 * @return bool
 	 */
 	public static function has_pagbank_payment_enabled() {
-		if ( ! function_exists( 'WC' ) || ! WC()->payment_gateways || empty( WC()->payment_gateways->payment_gateways ) ) {
-			return false;
+		if ( function_exists( 'WC' ) && WC()->payment_gateways && ! empty( WC()->payment_gateways->payment_gateways ) ) {
+			foreach ( WC()->payment_gateways->payment_gateways as $gateway ) {
+				if ( ! is_object( $gateway ) || ! isset( $gateway->id ) ) {
+					continue;
+				}
+				if ( ! self::is_pagbank_gateway_id( $gateway->id ) ) {
+					continue;
+				}
+				$enabled = isset( $gateway->enabled ) ? $gateway->enabled : '';
+				if ( self::is_gateway_enabled_value( $enabled ) ) {
+					return true;
+				}
+			}
 		}
-		foreach ( WC()->payment_gateways->payment_gateways as $gateway ) {
-			if ( ! is_object( $gateway ) || ! isset( $gateway->enabled, $gateway->id ) ) {
-				continue;
-			}
-			if ( 'yes' !== $gateway->enabled ) {
-				continue;
-			}
-			if ( self::is_pagbank_gateway_id( $gateway->id ) ) {
+
+		$unified = get_option( 'woocommerce_rm-pagbank_settings', array() );
+		if ( is_array( $unified ) && self::is_gateway_enabled_value( $unified['enabled'] ?? '' ) ) {
+			return true;
+		}
+
+		foreach ( array( 'pix', 'cc', 'boleto', 'redirect' ) as $suffix ) {
+			$settings = get_option( 'woocommerce_rm-pagbank-' . $suffix . '_settings', array() );
+			if ( is_array( $settings ) && self::is_gateway_enabled_value( $settings['enabled'] ?? '' ) ) {
 				return true;
 			}
 		}
+
+		if ( self::is_gateway_enabled_value( get_option( 'woocommerce_rm-pagbank-recurring_enabled', 'no' ) ) ) {
+			return true;
+		}
+
 		return false;
 	}
 

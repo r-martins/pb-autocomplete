@@ -3,35 +3,35 @@ Contributors: martins56
 Tags: woocommerce, checkout, cep, autocomplete, brasil
 Donate link: https://github.com/sponsors/r-martins
 Requires at least: 5.2
-Tested up to: 6.9
+Tested up to: 7.1
 Stable tag: 1.0.6
 Requires PHP: 7.4
 Requires Plugins: woocommerce, pagbank-connect
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Autocompleta endereço a partir do CEP no Checkout em Blocos do WooCommerce. Requer PagBank Connect.
+Autocompleta endereço a partir do CEP no Checkout em Blocos do WooCommerce. Requer PB Integrações.
 
 == Description ==
 
-**PB Autocomplete** preenche automaticamente os campos de endereço (rua, bairro, cidade, estado) no **Checkout em Blocos** do WooCommerce quando o cliente informa o CEP. Utiliza as APIs públicas [OpenCEP](https://opencep.com/) e [ViaCEP](https://viacep.com.br/) e só é carregado quando o [PagBank Connect](https://wordpress.org/plugins/pagbank-connect/) está instalado e há ao menos um método de pagamento disponível no checkout.
+**PB Autocomplete** preenche automaticamente os campos de endereço (rua, bairro, cidade, estado) no **Checkout em Blocos** do WooCommerce quando o cliente informa o CEP. Utiliza as APIs públicas [OpenCEP](https://opencep.com/) e [ViaCEP](https://viacep.com.br/) e só é carregado quando o [PB Integrações](https://wordpress.org/plugins/pagbank-connect/) (slug `pagbank-connect`, antigo PagBank Connect) está instalado e há ao menos um método de pagamento disponível no checkout.
 
 = Recursos =
 
 * Autocomplete de endereço por CEP no Checkout em Blocos do WooCommerce
 * Integração com OpenCEP (principal) e ViaCEP (alternativa) para dados de CEP no Brasil
 * Opção para exibir o CEP como primeiro campo na cobrança ou na entrega (configurável no editor de blocos ao editar a página de checkout)
-* Dependência explícita de WooCommerce e PagBank Connect
+* Dependência explícita de WooCommerce e PB Integrações
 
 = Requisitos =
 
 * [WooCommerce](https://wordpress.org/plugins/woocommerce/) instalado e ativo
-* [PagBank Connect](https://wordpress.org/plugins/pagbank-connect/) instalado e ativo, com ao menos um método de pagamento (PIX, cartão, boleto etc.) habilitado
+* [PB Integrações](https://wordpress.org/plugins/pagbank-connect/) instalado e ativo, com ao menos um método de pagamento (PIX, cartão, boleto etc.) habilitado
 * Uso do **Checkout em Blocos** do WooCommerce (não se aplica ao checkout legado/shortcode)
 
 == Installation ==
 
-1. Certifique-se de ter o **WooCommerce** e o **PagBank Connect** instalados e ativos
+1. Certifique-se de ter o **WooCommerce** e o **PB Integrações** instalados e ativos
 2. Instale e ative o PB Autocomplete (Plugins > Adicionar novo, pesquise por "PB Autocomplete" ou envie o zip)
 3. Se estiver compilando a partir do código-fonte: na pasta do plugin, execute `npm install` e depois `npm run build`
 
@@ -59,9 +59,9 @@ Este plugin envia pedidos **HTTPS GET** a partir do **navegador do cliente** (Ch
 * **Termos / condições de uso:** Documentação oficial e avisos de uso (incluindo limites a uso massivo abusivo) estão no site do ViaCEP: https://viacep.com.br/
 * **Privacidade:** O ViaCEP **não** disponibiliza uma página dedicada de política de privacidade. Contato do operador: https://viacep.com.br/faleconosco/
 
-= PagBank Connect (dependência obrigatória) =
+= PB Integrações (dependência obrigatória) =
 
-O PB Autocomplete exige o plugin **PagBank Connect**. Pagamentos, credenciais e outros serviços de terceiros ligados ao PagBank são tratados pelo **PagBank Connect** e pelo PagBank — não pelo PB Autocomplete. Documentação no WordPress.org: https://wordpress.org/plugins/pagbank-connect/ e Termos e Privacidade do PagBank Integrações em https://pbintegracoes.com/terms.
+O PB Autocomplete exige o plugin **PB Integrações** (slug `pagbank-connect`, antigo PagBank Connect). Pagamentos, credenciais e outros serviços de terceiros ligados ao PagBank/Vindi são tratados pelo **PB Integrações** — não pelo PB Autocomplete. Documentação no WordPress.org: https://wordpress.org/plugins/pagbank-connect/ e Termos e Privacidade em https://pbintegracoes.com/terms.
 
 == Frequently Asked Questions ==
 
@@ -71,7 +71,7 @@ Não. O PB Autocomplete foi desenvolvido apenas para o **Checkout em Blocos** do
 
 = Por que o autocomplete não aparece no meu checkout? =
 
-Verifique se: (1) o PagBank Connect está ativo e tem ao menos um método de pagamento habilitado nas configurações do WooCommerce; (2) a loja usa o Checkout em Blocos (página de checkout com blocos); (3) o CEP tem 8 dígitos e é válido no OpenCEP ou ViaCEP.
+Verifique se: (1) o PB Integrações está ativo e tem ao menos um método de pagamento habilitado nas configurações do WooCommerce; (2) a loja usa o Checkout em Blocos (página de checkout com blocos); (3) o CEP tem 8 dígitos e é válido no OpenCEP ou ViaCEP.
 
 = De onde vêm os dados de endereço? =
 
@@ -79,9 +79,9 @@ Os dados vêm da API pública [OpenCEP](https://opencep.com/), que retorna logra
 
 Se o OpenCEP estiver indisponível, é usado o [ViaCEP](https://viacep.com.br/) como alternativa.
 
-= Posso usar sem o PagBank Connect? =
+= Posso usar sem o PB Integrações? =
 
-Não. O PB Autocomplete integra o ecossistema PagBank Integrações e exige o PagBank Connect ativo com método de pagamento disponível. Caso contrário, o script de autocomplete não é carregado no checkout.
+Não. O PB Autocomplete integra o ecossistema PB Integrações e exige o plugin PB Integrações ativo com método de pagamento disponível. Caso contrário, o script de autocomplete não é carregado no checkout.
 
 = Como faço para o CEP aparecer primeiro? =
 
@@ -89,11 +89,14 @@ Edite a página de checkout no editor de blocos, selecione o bloco de endereço 
 
 == Changelog ==
 
+= 1.0.6 =
+* Textos e documentação atualizados: dependência referida como **PB Integrações** (antigo PagBank Connect); slug do plugin permanece `pagbank-connect`.
+
 = 1.0.4 =
-* Documentação de serviços de terceiros (OpenCEP, ViaCEP, PagBank Connect) no readme para conformidade com o WordPress.org.
+* Documentação de serviços de terceiros (OpenCEP, ViaCEP, PB Integrações) no readme para conformidade com o WordPress.org.
 * Avisos de dependência limitados às telas Plugins e Adicionar plugin (diretriz 11 do diretório de plugins WordPress.org).
-* Detecção de métodos PagBank pelos IDs de gateway `rm-pagbank` (unificado) ou `rm-pagbank-*` (PIX, cartão, boleto, Checkout PagBank, recorrência etc.); aviso opcional no admin quando o PagBank Connect está ativo mas nenhum método PagBank está habilitado (Plugins, Adicionar plugin, WooCommerce → Configurações → Finalizar compra).
-* A verificação “sem método PagBank” executa no hook `init`, para não carregar traduções de outros plugins cedo demais (WordPress 6.7+).
+* Detecção de métodos PB Integrações pelos IDs de gateway `rm-pagbank` (unificado) ou `rm-pagbank-*` (PIX, cartão, boleto, Checkout PB, recorrência etc.); aviso opcional no admin quando o PB Integrações está ativo mas nenhum método está habilitado (Plugins, Adicionar plugin, WooCommerce → Configurações → Finalizar compra).
+* A verificação “sem método PB Integrações” executa no hook `init`, para não carregar traduções de outros plugins cedo demais (WordPress 6.7+).
 
 = 1.0.3 =
 * Versão atual do plugin.

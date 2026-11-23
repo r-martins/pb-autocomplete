@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       PB Autocomplete CEP for WooCommerce
  * Plugin URI:        https://pbintegracoes.com/
- * Description:       Autocompleta endereço a partir do CEP no Checkout em Blocos. Requer PagBank Connect ativo com ao menos um método de pagamento disponível.
+ * Description:       Autocompleta endereço a partir do CEP no Checkout em Blocos. Requer PB Integrações ativo com ao menos um método de pagamento disponível.
  * Version:           1.0.6
  * Requires at least: 5.2
  * Requires PHP:      7.4
@@ -37,8 +37,8 @@ function pb_autocomplete_init() {
 	}
 	require_once PB_AUTOCOMPLETE_PATH . 'includes/class-pb-autocomplete-checkout.php';
 	require_once PB_AUTOCOMPLETE_PATH . 'includes/class-pb-autocomplete-rest.php';
-	// Defer gateway check to init: iterating gateways in plugins_loaded triggers other plugins' i18n too early (WP 6.7+).
-	add_action( 'init', 'pb_autocomplete_register_payment_method_notice', 1 );
+	// Defer gateway check to woocommerce_init: PagBank's gateway list depends on admin ?section=; options fallback handles that.
+	add_action( 'woocommerce_init', 'pb_autocomplete_register_payment_method_notice', 10 );
 	PB_Autocomplete_Checkout::init();
 	PB_Autocomplete_REST::init();
 	if ( is_admin() ) {
@@ -96,7 +96,7 @@ function pb_autocomplete_pagbank_missing_notice() {
 	if ( ! pb_autocomplete_should_show_dependency_notice() ) {
 		return;
 	}
-	echo '<div class="notice notice-error"><p>' . esc_html__( 'PB Autocomplete requer o plugin PagBank Connect instalado e ativo.', 'pb-autocomplete' ) . '</p></div>';
+	echo '<div class="notice notice-error"><p>' . esc_html__( 'PB Autocomplete requer o plugin PB Integrações instalado e ativo.', 'pb-autocomplete' ) . '</p></div>';
 }
 
 /**
@@ -112,7 +112,7 @@ function pb_autocomplete_register_payment_method_notice() {
 }
 
 /**
- * PagBank Connect is active but no PagBank payment method is enabled (PIX, cartão, boleto, Checkout PagBank, recorrência, etc.).
+ * PB Integrações is active but no payment method is enabled (PIX, cartão, boleto, Checkout PB, recorrência, etc.).
  */
 function pb_autocomplete_should_show_payment_method_notice() {
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
@@ -138,14 +138,14 @@ function pb_autocomplete_pagbank_no_payment_method_notice() {
 	$payments_url = admin_url( 'admin.php?page=wc-settings&tab=checkout' );
 	$message      = sprintf(
 		/* translators: %s: link to WooCommerce checkout (payment methods) settings */
-		__( 'PB Autocomplete exige ao menos um método de pagamento PagBank ativo (PIX, Cartão de Crédito, Boleto, Checkout PagBank ou Recorrência). Ative um deles em %s.', 'pb-autocomplete' ),
+		__( 'PB Autocomplete exige ao menos um método de pagamento PB Integrações ativo (PIX, Cartão de Crédito, Boleto, Checkout PB ou Recorrência). Ative um deles em %s.', 'pb-autocomplete' ),
 		'<a href="' . esc_url( $payments_url ) . '">' . esc_html__( 'WooCommerce → Configurações → Finalizar compra', 'pb-autocomplete' ) . '</a>'
 	);
 	echo '<div class="notice notice-warning"><p>' . wp_kses_post( $message ) . '</p></div>';
 }
 
 /**
- * Deactivate self if PagBank Connect is deactivated.
+ * Deactivate self if PB Integrações (pagbank-connect) is deactivated.
  */
 register_activation_hook( __FILE__, 'pb_autocomplete_activation' );
 
@@ -153,7 +153,7 @@ function pb_autocomplete_activation() {
 	if ( ! class_exists( 'WooCommerce' ) || ( ! defined( 'WC_PAGSEGURO_CONNECT_VERSION' ) && ! class_exists( 'RM_PagBank\Connect' ) ) ) {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
 		wp_die(
-			esc_html__( 'PB Autocomplete requer WooCommerce e PagBank Connect instalados e ativos.', 'pb-autocomplete' ),
+			esc_html__( 'PB Autocomplete requer WooCommerce e PB Integrações instalados e ativos.', 'pb-autocomplete' ),
 			'',
 			[ 'back_link' => true ]
 		);
